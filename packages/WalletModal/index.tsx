@@ -79,7 +79,7 @@ const WalletModal = ({ collection }: { collection: WalletCollection }) => {
       isOpen={openConnectModal}
       onRequestClose={hanldeCloseConnectModal}
       ariaHideApp={false}
-      className="modal"
+      className="b2WalletModal"
       overlayClassName="overlay"
     >
       <div>
