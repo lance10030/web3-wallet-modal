@@ -1,20 +1,9 @@
-## Vite React Packages
+# Particle BTC Connect
 
-#### 安装依赖
+First Account Abstraction Protocol on Bitcoin
 
-```
-yarn
-```
+## Learn More
 
-#### 开发组件（example）
-
-```
-yarn dev
-```
-
-#### 组件打包
-
-```
-yarn build
-```
-
+- [Documentation](https://docs.particle.network/developers/btc-connect)
+- [Website](https://particle.network)
+- [Dashbord](https://dashboard.particle.network)
