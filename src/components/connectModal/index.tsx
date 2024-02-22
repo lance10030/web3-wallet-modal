@@ -148,7 +148,7 @@ const ConnectModal = ({ collection }: { collection: WalletCollection }) => {
               btcConnectors.map(c => {
                 const installed = getInstalled(c.metadata.id)
                 return (
-                  <div key={c.name}
+                  <div key={c.metadata.id}
                     onClick={() => {
                       if (installed) {
                         connectBtcWallet(c.metadata.id)

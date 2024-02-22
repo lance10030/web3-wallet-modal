@@ -28,7 +28,10 @@ const globalContextDefaultValues: GlobalContextType = {
 };
 const B2ModalContext = createContext(globalContextDefaultValues);
 
-export const useB2Modal = () => useContext(B2ModalContext);
+export const useB2Modal = () => {
+  const context = useContext(B2ModalContext);
+  return context
+}
 
 export const B2ModalProvider: FC<{ children: ReactNode, isAutoConnect?: boolean }> = ({ children, isAutoConnect = false }) => {
   const { connect } = useConnector();
@@ -104,3 +107,12 @@ export const useCurrentWallet = () => {
     walletType
   }
 }
+
+export const useOpenModal = () => {
+  const { hanldeCloseConnectModal, handleOpenConnectModal } = useB2Modal();
+  return {
+    handleOpenConnectModal,
+    hanldeCloseConnectModal
+  }
+}
+
