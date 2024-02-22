@@ -80,16 +80,20 @@ const ConnectModal = ({ collection }: { collection: WalletCollection }) => {
   }
 
   const connectBtcWallet = async (btcWallet: string) => {
-    const res = await connectBtc(btcWallet)
-    if (btcWallet?.toLocaleLowerCase().includes('okx')) {
-      setCurrentWallet(WalletTypes.WALLET_OKX_BTC)
-      saveWalletToLocal(WalletTypes.WALLET_OKX_BTC)
+    try {
+      const res = await connectBtc(btcWallet)
+      if (btcWallet?.toLocaleLowerCase().includes('okx')) {
+        setCurrentWallet(WalletTypes.WALLET_OKX_BTC)
+        saveWalletToLocal(WalletTypes.WALLET_OKX_BTC)
+      }
+      if (btcWallet?.toLocaleLowerCase().includes('unisat')) {
+        setCurrentWallet(WalletTypes.WALLET_UNISAT)
+        saveWalletToLocal(WalletTypes.WALLET_UNISAT)
+      }
+      hanldeCloseConnectModal()
+    } catch (error) {
+      console.log('connect error for:', btcWallet)
     }
-    if (btcWallet?.toLocaleLowerCase().includes('unisat')) {
-      setCurrentWallet(WalletTypes.WALLET_UNISAT)
-      saveWalletToLocal(WalletTypes.WALLET_UNISAT)
-    }
-    hanldeCloseConnectModal()
   }
 
   const getInstalledWallet = () => {

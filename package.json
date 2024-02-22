@@ -41,7 +41,6 @@
   "dependencies": {
     "@ethereumjs/util": "^9.0.1",
     "@particle-network/btc-connectkit": "^1.0.0-alpha.6",
-    "bitcore-lib": "^10.0.23",
     "react-modal": "^3.16.1"
   },
   "devDependencies": {
