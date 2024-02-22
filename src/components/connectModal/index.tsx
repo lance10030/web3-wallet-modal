@@ -117,8 +117,8 @@ const ConnectModal = ({ collection }: { collection: WalletCollection }) => {
       isOpen={openConnectModal}
       onRequestClose={hanldeCloseConnectModal}
       ariaHideApp={false}
-      className="b2WalletModal"
-      overlayClassName="overlay"
+      className={styles.b2WalletModal}
+      overlayClassName={styles.overlay}
     >
       <ModalHeader hanldeCloseConnectModal={hanldeCloseConnectModal} />
       <div className={styles.content}>
@@ -154,7 +154,7 @@ const ConnectModal = ({ collection }: { collection: WalletCollection }) => {
                         connectBtcWallet(c.metadata.id)
                       }
                     }}>
-                    <WalletItem installed={installed} walletIcon={getImageUrl(c.name)} walletName={`${c.name} Wallet`} />
+                    <WalletItem installed={installed} walletIcon={getImageUrl(c.metadata.id)} walletName={`${c.metadata.id} Wallet`} />
                   </div>
                 )
               })
