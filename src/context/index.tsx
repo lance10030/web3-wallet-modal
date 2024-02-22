@@ -31,7 +31,6 @@ const B2ModalContext = createContext(globalContextDefaultValues);
 export const useB2Modal = () => useContext(B2ModalContext);
 
 export const B2ModalProvider: FC<{ children: ReactNode, isAutoConnect?: boolean }> = ({ children, isAutoConnect = false }) => {
-  // const { connect, isConnected, setCurrentWallet } = useBtc()
   const { connect } = useConnector();
   const { accounts } = useAccounts();
   const [currentWallet, setCurrentWallet] = useState<WalletTypes>()

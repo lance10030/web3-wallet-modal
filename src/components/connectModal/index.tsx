@@ -51,16 +51,16 @@ const ConnectModal = ({ collection }: { collection: WalletCollection }) => {
   }, [collection])
 
   const getImageUrl = (wallet: string) => {
-    if (wallet.toLocaleLowerCase().includes('okx')) return iconOkx
-    if (wallet.toLocaleLowerCase().includes('unisat')) return iconUnisat
-    if (wallet.toLocaleLowerCase().includes('metamask')) return iconMetamask
+    if (wallet?.toLocaleLowerCase().includes('okx')) return iconOkx
+    if (wallet?.toLocaleLowerCase().includes('unisat')) return iconUnisat
+    if (wallet?.toLocaleLowerCase().includes('metamask')) return iconMetamask
     return ''
   }
 
   const getInstalled = useCallback((wallet: string) => {
-    if (wallet.toLocaleLowerCase().includes('okx')) return installedMap[WalletTypes.WALLET_OKX_EVM]
-    if (wallet.toLocaleLowerCase().includes('unisat')) return installedMap[WalletTypes.WALLET_UNISAT]
-    if (wallet.toLocaleLowerCase().includes('metamask')) return installedMap[WalletTypes.WALLET_METAMASK]
+    if (wallet?.toLocaleLowerCase().includes('okx')) return installedMap[WalletTypes.WALLET_OKX_EVM]
+    if (wallet?.toLocaleLowerCase().includes('unisat')) return installedMap[WalletTypes.WALLET_UNISAT]
+    if (wallet?.toLocaleLowerCase().includes('metamask')) return installedMap[WalletTypes.WALLET_METAMASK]
     return false
 
   }, [installedMap])
@@ -70,10 +70,10 @@ const ConnectModal = ({ collection }: { collection: WalletCollection }) => {
       const res = await connectAsync({ connector: c })
     }
     let name
-    if (c.name.toLocaleLowerCase().includes('metamask')) {
+    if (c.name?.toLocaleLowerCase().includes('metamask')) {
       name = WalletTypes.WALLET_METAMASK
     }
-    if (c.name.toLocaleLowerCase().includes('okx')) name = WalletTypes.WALLET_OKX_EVM
+    if (c.name?.toLocaleLowerCase().includes('okx')) name = WalletTypes.WALLET_OKX_EVM
     name && setCurrentWallet(name)
     name && saveWalletToLocal(name)
     hanldeCloseConnectModal()
@@ -81,11 +81,11 @@ const ConnectModal = ({ collection }: { collection: WalletCollection }) => {
 
   const connectBtcWallet = async (btcWallet: string) => {
     const res = await connectBtc(btcWallet)
-    if (btcWallet.toLocaleLowerCase().includes('okx')) {
+    if (btcWallet?.toLocaleLowerCase().includes('okx')) {
       setCurrentWallet(WalletTypes.WALLET_OKX_BTC)
       saveWalletToLocal(WalletTypes.WALLET_OKX_BTC)
     }
-    if (btcWallet.toLocaleLowerCase().includes('unisat')) {
+    if (btcWallet?.toLocaleLowerCase().includes('unisat')) {
       setCurrentWallet(WalletTypes.WALLET_UNISAT)
       saveWalletToLocal(WalletTypes.WALLET_UNISAT)
     }
