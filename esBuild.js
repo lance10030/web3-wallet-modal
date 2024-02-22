@@ -1,23 +1,23 @@
-import { build } from 'esbuild';
-import { replace } from 'esbuild-plugin-replace';
-import { ScssModulesPlugin } from 'esbuild-scss-modules-plugin';
+import { build } from "esbuild";
+import { replace } from "esbuild-plugin-replace";
+import { ScssModulesPlugin } from "esbuild-scss-modules-plugin";
 
-const isWatching = process.argv.includes('--watch');
+const isWatching = process.argv.includes("--watch");
 
 const buildConfig = {
   banner: {
     js: '"use client";',
   },
   bundle: true,
-  platform: 'browser',
-  target: 'es2015',
+  platform: "browser",
+  target: "es2015",
   loader: {
-    '.png': 'dataurl',
-    '.svg': 'dataurl',
-    '.woff2': 'file',
-    '.ttf': 'file',
+    ".png": "dataurl",
+    ".svg": "dataurl",
+    ".woff2": "file",
+    ".ttf": "file",
   },
-  drop: process.env.NODE_ENV !== 'development' ? ['console', 'debugger'] : [],
+  drop: process.env.NODE_ENV !== "development" ? ["console", "debugger"] : [],
   plugins: [
     replace({
       include: /src\/index.ts$/,
@@ -26,7 +26,7 @@ const buildConfig = {
       },
     }),
     {
-      name: 'external',
+      name: "external",
       setup(build) {
         let filter = /^[^./]|^\.[^./]|^\.\.[^/]/;
         build.onResolve({ filter }, (args) => ({
@@ -40,44 +40,44 @@ const buildConfig = {
       minify: true,
     }),
   ],
-  entryPoints: ['src/index.ts'],
-  tsconfig: './tsconfig.json',
+  entryPoints: ["src/index.ts"],
+  tsconfig: "./tsconfig.json",
   watch: isWatching
     ? {
         onRebuild(error, result) {
-          if (error) console.error('main build failed:', error);
-          else console.log('main build succeeded:', result);
+          if (error) console.error("main build failed:", error);
+          else console.log("main build succeeded:", result);
         },
       }
     : undefined,
   minify: false,
   sourcemap: true,
   define: {
-    'process.env.NODE_ENV': 'production',
+    "process.env.NODE_ENV": "production",
   },
-  external: ['react', 'react-dom'],
+  external: ["react", "react-dom", "viem", "wagmi"],
 };
 
 const buildESM = build({
   ...buildConfig,
-  format: 'esm',
-  outdir: 'esm',
+  format: "esm",
+  outdir: "esm",
   splitting: true,
 });
 
 const buildCJS = build({
   ...buildConfig,
-  format: 'cjs',
-  outdir: 'dist',
+  format: "cjs",
+  outdir: "dist",
   splitting: false,
 });
 
 Promise.all([buildESM, buildCJS])
   .then(() => {
     if (isWatching) {
-      console.log('watching...');
+      console.log("watching...");
     } else {
-      console.log('build success...');
+      console.log("build success...");
     }
   })
   .catch(() => process.exit(1));

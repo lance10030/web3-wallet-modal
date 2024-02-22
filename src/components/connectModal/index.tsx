@@ -1,110 +1,170 @@
-import { useState } from 'react';
-import { type BaseConnector } from '../../connector/base';
-import { useConnectProvider, useConnector } from '../../context';
-import back from '../../icons/back.svg';
-import close from '../../icons/close.svg';
-import retryIcon from '../../icons/retry.svg';
+import { Connector, useAccount, useConnect as useEthConnect } from "wagmi";
+
+import Modal from 'react-modal';
+import { useB2Modal, useCurrentWallet } from "../../context";
+import { WalletCollection, WalletTypes, InstalledMap } from "src/types/types";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import iconMetamask from '../../imgs/icon_metamask.png'
+import iconOkx from '../../imgs/icon_okx.svg'
+import iconUnisat from '../../imgs/icon_unisat.svg'
+import iconType from '../../imgs/icon_type.svg'
+import './styles/index.less';
+import { saveWalletToLocal } from "src/utils";
+import WalletItem from "./WalletItem";
+import ModalHeader from "./ModalHeader";
+import { useConnectModal, useConnector as useBtcConnector } from '@particle-network/btc-connectkit';
 import styles from './index.module.scss';
 
-const ConnectModal = ({ connectors }: { connectors: BaseConnector[] }) => {
-  const [backVisible, setBackVisible] = useState(false);
-  const [retryVisible, setRetryVisible] = useState(false);
-  const [walletReady, setWalletReady] = useState(true);
-  const [selectConnector, setSelectConnector] = useState<BaseConnector>();
-  const { closeConnectModal } = useConnectProvider();
-  const { connect } = useConnector();
 
-  const onConnect = async (connector: BaseConnector) => {
-    setBackVisible(true);
-    setSelectConnector(connector);
-    if (connector.isReady()) {
-      try {
-        await connect(connector.metadata.id);
-        closeConnectModal();
-      } catch (error: any) {
-        console.error('onConnect error', error);
-        if (error.code === 4001) {
-          setRetryVisible(true);
-        }
-      }
-    } else {
-      setWalletReady(false);
-    }
-  };
+const defaultInstalledMap: Record<WalletTypes, boolean> = {
+  metamask: false,
+  unisat: false,
+  okx_btc: false,
+  okx_evm: false,
+}
 
-  const onBack = () => {
-    setBackVisible(false);
-    setRetryVisible(false);
-    setWalletReady(true);
-    setSelectConnector(undefined);
-  };
-
-  const onClose = () => {
-    closeConnectModal();
-  };
-
-  const onRetry = () => {
-    setRetryVisible(false);
-    if (selectConnector) {
-      onConnect(selectConnector);
-    }
-  };
-
+const SubTitle = ({ title }: { title: string }) => {
   return (
-    <div className={styles.containerModal}>
-      <div className={styles.modal}>
-        <div className={styles.title}>{selectConnector?.metadata.name || 'Choose Wallet'}</div>
-        <img className={styles.closeBtn} src={close} onClick={onClose}></img>
-        {backVisible && <img className={styles.backBtn} src={back} onClick={onBack}></img>}
-
-        {!backVisible &&
-          connectors.map((connector) => {
-            return (
-              <div className={styles.walletItem} key={connector.metadata.id} onClick={() => onConnect(connector)}>
-                <img className={styles.walletIcon} src={connector.metadata.icon}></img>
-                <div className={styles.walletName}>{connector.metadata.name}</div>
-              </div>
-            );
-          })}
-
-        {backVisible && selectConnector && (
-          <div className={styles.connecting}>
-            <div className={styles.connectingIconContainer}>
-              <img className={styles.connectingIcon} src={selectConnector.metadata.icon}></img>
-              {retryVisible && (
-                <div className={styles.retryContainer} onClick={onRetry}>
-                  <img className={styles.retryIcon} src={retryIcon}></img>
-                </div>
-              )}
-            </div>
-
-            {walletReady ? (
-              <>
-                <div className={styles.connection}>{retryVisible ? 'Request Cancelled' : 'Requesting Connection'}</div>
-                <div className={styles.acceptRequest}>
-                  {retryVisible
-                    ? 'You cancelled the request.\nClick above to try again.'
-                    : 'Accept the request through your wallet to connect to this app.'}
-                </div>
-              </>
-            ) : (
-              <>
-                <div className={styles.connection}>Wallet Not Installed.</div>
-                <button
-                  className={styles.btnDownload}
-                  onClick={() => {
-                    window.open(selectConnector?.metadata.downloadUrl, '_blank');
-                  }}
-                >
-                  Get
-                </button>
-              </>
-            )}
-          </div>
-        )}
+    <div className="title">
+      <img src={iconType} alt="icon" />
+      <div>
+        {title}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ConnectModal;
+const ConnectModal = ({ collection }: { collection: WalletCollection }) => {
+  const { connectAsync, connectors, error, isLoading, pendingConnector } =
+    useEthConnect();
+  // const { connect: connectBtc, setCurrentWallet, connectors: btcConnectors } = useBtc()
+  const { setCurrentWallet } = useCurrentWallet()
+  const { connectors: btcConnectors, connect: connectBtc } = useBtcConnector()
+  const { openConnectModal, hanldeCloseConnectModal } = useB2Modal()
+  const { isConnected } = useAccount()
+  const [installedMap, setInstalledMap] = useState<InstalledMap>(defaultInstalledMap)
+
+  const showEth = useMemo(() => {
+    return collection === WalletCollection.ALL || collection === WalletCollection.ETH
+  }, [collection])
+  const showBtc = useMemo(() => {
+    return collection === WalletCollection.ALL || collection === WalletCollection.BTC
+  }, [collection])
+
+  const getImageUrl = (wallet: string) => {
+    if (wallet.toLocaleLowerCase().includes('okx')) return iconOkx
+    if (wallet.toLocaleLowerCase().includes('unisat')) return iconUnisat
+    if (wallet.toLocaleLowerCase().includes('metamask')) return iconMetamask
+    return ''
+  }
+
+  const getInstalled = useCallback((wallet: string) => {
+    if (wallet.toLocaleLowerCase().includes('okx')) return installedMap[WalletTypes.WALLET_OKX_EVM]
+    if (wallet.toLocaleLowerCase().includes('unisat')) return installedMap[WalletTypes.WALLET_UNISAT]
+    if (wallet.toLocaleLowerCase().includes('metamask')) return installedMap[WalletTypes.WALLET_METAMASK]
+    return false
+
+  }, [installedMap])
+
+  const handleClickEthWallet = async (c: Connector) => {
+    if (!isConnected) {
+      const res = await connectAsync({ connector: c })
+    }
+    let name
+    if (c.name.toLocaleLowerCase().includes('metamask')) {
+      name = WalletTypes.WALLET_METAMASK
+    }
+    if (c.name.toLocaleLowerCase().includes('okx')) name = WalletTypes.WALLET_OKX_EVM
+    name && setCurrentWallet(name)
+    name && saveWalletToLocal(name)
+    hanldeCloseConnectModal()
+  }
+
+  const connectBtcWallet = async (btcWallet: string) => {
+    const res = await connectBtc(btcWallet)
+    if (btcWallet.toLocaleLowerCase().includes('okx')) {
+      setCurrentWallet(WalletTypes.WALLET_OKX_BTC)
+      saveWalletToLocal(WalletTypes.WALLET_OKX_BTC)
+    }
+    if (btcWallet.toLocaleLowerCase().includes('unisat')) {
+      setCurrentWallet(WalletTypes.WALLET_UNISAT)
+      saveWalletToLocal(WalletTypes.WALLET_UNISAT)
+    }
+    hanldeCloseConnectModal()
+  }
+
+  const getInstalledWallet = () => {
+    if (typeof window === 'undefined') return;
+    const installed = {
+      ...installedMap
+    }
+    if (window.unisat) installed.unisat = true;
+    if (window.ethereum) installed.metamask = true;
+    if (window.okxwallet) {
+      installed.okx_btc = true;
+      installed.okx_evm = true
+    }
+    setInstalledMap(installed)
+  }
+
+  useEffect(() => {
+    if (openConnectModal) {
+      getInstalledWallet()
+    }
+  }, [openConnectModal])
+
+  return (
+    <Modal
+      isOpen={openConnectModal}
+      onRequestClose={hanldeCloseConnectModal}
+      ariaHideApp={false}
+      className="b2WalletModal"
+      overlayClassName="overlay"
+    >
+      <ModalHeader hanldeCloseConnectModal={hanldeCloseConnectModal} />
+      <div className={styles.content}>
+        {
+          showEth && <div>
+            <SubTitle title="Ethereum Wallet" />
+            {
+              showEth && connectors.map(c => {
+                const installed = getInstalled(c.name)
+                return (
+                  <div onClick={() => {
+                    if (installed) {
+                      handleClickEthWallet(c)
+                    }
+                  }} key={c.id}>
+                    <WalletItem installed={installed} walletIcon={getImageUrl(c.name)} walletName={c.name} />
+                  </div>
+                )
+              })
+            }
+          </div>
+        }
+        {
+          showBtc && <div>
+            <SubTitle title="Bitcoin Wallet" />
+            {
+              btcConnectors.map(c => {
+                const installed = getInstalled(c.metadata.id)
+                return (
+                  <div key={c.name}
+                    onClick={() => {
+                      if (installed) {
+                        connectBtcWallet(c.metadata.id)
+                      }
+                    }}>
+                    <WalletItem installed={installed} walletIcon={getImageUrl(c.name)} walletName={`${c.name} Wallet`} />
+                  </div>
+                )
+              })
+            }
+          </div>
+        }
+      </div>
+    </Modal>
+  )
+}
+
+export default ConnectModal

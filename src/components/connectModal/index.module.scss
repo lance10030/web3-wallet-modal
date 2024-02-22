@@ -1,134 +1,77 @@
-.containerModal {
-  width: 100%;
-  height: 100%;
+.b2WalletModal {
   position: fixed;
-  background: #00000080;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow: hidden;
-  z-index: 100000;
-  backdrop-filter: blur(12px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-
-  .modal {
-    width: 360px;
-    max-width: 100%;
-    margin: 0 16px;
-    height: auto;
-    background-color: #171a1f;
-    position: relative;
-    border-radius: 16px;
-    font-size: 14px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  min-width: 508px;
+  min-height: 200px;
+  border-radius: 10px;
+  color: black;
+  .header {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
+    padding: 18px 24px;
+    background: #fff8ee;
+    font-size: 22px;
+    font-weight: 600;
+    color: #000;
+    text-transform: capitalize;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+  }
+  .content {
     padding: 24px;
-    gap: 12px;
-
     .title {
-      font-size: 18px;
-      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      font-size: 20px;
+      margin-bottom: 12px;
     }
-
-    .closeBtn {
-      cursor: pointer;
-      position: absolute;
-      top: 16px;
-      right: 16px;
-    }
-
-    .backBtn {
-      cursor: pointer;
-      position: absolute;
-      top: 16px;
-      left: 16px;
-    }
-
     .walletItem {
       display: flex;
-      border-radius: 8px;
-      border: 1px solid #3a3a3a;
-      width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
-      cursor: pointer;
-
-      &:hover {
-        background: hsla(0, 0%, 100%, 0.05);
-      }
-
-      .walletIcon {
-        height: 42px;
-        width: 42px;
-        border-radius: 4px;
-      }
-
-      .walletName {
-        flex-grow: 1;
-        text-align: center;
-        line-height: 42px;
-      }
-    }
-
-    .connecting {
-      height: 204px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
       align-items: center;
-
-      .connectingIconContainer {
-        position: relative;
-
-        .retryContainer {
-          background: #4b5563;
-          border-radius: 50%;
-          padding: 4px;
-          cursor: pointer;
-          position: absolute;
-          bottom: -12px;
-          right: -12px;
-
-          .retryIcon {
-            width: 24px;
-            height: 24px;
-          }
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding: 12px 24px;
+      cursor: pointer;
+      border: 1px solid #000;
+      border-radius: 4px;
+      .left {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        .walletLogo {
+          width: 32px;
+          height: 32px;
         }
       }
-
-      .connectingIcon {
-        width: 60px;
-        height: 60px;
-        border-radius: 4px;
-      }
-
-      .connection {
-        font-size: 18px;
-        margin-top: 20px;
-      }
-      .acceptRequest {
-        font-size: 14px;
-        margin-top: 6px;
-        text-align: center;
-        white-space: pre-wrap;
-        color: rgba(255, 255, 255, 0.4);
-      }
-      .btnDownload {
-        border-radius: 8px;
-        border: 1px solid #3a3a3a;
-        padding: 6px 30px;
-        margin-top: 20px;
-        font-size: 16px;
-        &:hover {
-          background: hsla(0, 0%, 100%, 0.05);
+      .right {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        .install {
+          background: #000;
+          color: white;
+          border-radius: 20px;
+          cursor: pointer;
+          padding: 4px 20px;
+          opacity: 1;
         }
       }
     }
   }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
 }
