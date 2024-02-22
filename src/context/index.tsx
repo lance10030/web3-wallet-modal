@@ -1,9 +1,9 @@
 import type { FC, ReactNode } from 'react';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import ConnectModal from 'src/components/connectModal';
+import ConnectModal from '../components/connectModal';
 import { BtcConnectorName, WalletCollection, WalletTypes } from 'src/types/types';
 import { getWalletFromLocal } from '../utils/localstore';
-import { useConnectModal, useConnector, useAccounts } from '@particle-network/btc-connectkit';
+import { useConnector, useAccounts } from '@particle-network/btc-connectkit';
 
 type GlobalContextType = {
   openConnectModal: boolean;
