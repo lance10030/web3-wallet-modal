@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from 'react';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import ConnectModal from '../components/connectModal';
-import { BtcConnectorName, WalletCollection, WalletTypes } from 'src/types/types';
+import { BtcConnectorName, WalletCollection, WalletTypes } from '../types/types';
 import { getWalletFromLocal } from '../utils/localstore';
 import { useConnector, useAccounts } from '@particle-network/btc-connectkit';
 

@@ -2,13 +2,13 @@ import { Connector, useAccount, useConnect as useEthConnect } from "wagmi";
 
 import Modal from 'react-modal';
 import { useB2Modal, useCurrentWallet } from "../../context";
-import { WalletCollection, WalletTypes, InstalledMap } from "src/types/types";
+import { WalletCollection, WalletTypes, InstalledMap } from "../../types/types";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import iconMetamask from '../../imgs/icon_metamask.png'
 import iconOkx from '../../imgs/icon_okx.svg'
 import iconUnisat from '../../imgs/icon_unisat.svg'
 import iconType from '../../imgs/icon_type.svg'
-import { saveWalletToLocal } from "src/utils";
+import { saveWalletToLocal } from "../../utils";
 import WalletItem from "./WalletItem";
 import ModalHeader from "./ModalHeader";
 import { useConnectModal, useConnector as useBtcConnector } from '@particle-network/btc-connectkit';
