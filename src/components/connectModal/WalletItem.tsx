@@ -22,7 +22,7 @@ const WalletItem = ({ walletIcon, walletName, installed }: Iprops) => {
         <img className={styles.walletLogo} src={walletIcon} alt="logo" />
         <div>{walletName}</div>
       </div>
-      <div className='right'>
+      <div className={styles.right}>
         {
           !installed && <div className={styles.install} onClick={() => {
             const url = getDownloadUrlByKey(walletName)

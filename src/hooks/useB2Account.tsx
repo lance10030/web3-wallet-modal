@@ -12,7 +12,9 @@ const useB2Account = () => {
   return {
     isConnected: walletType === 'btc' ? isBtcConnected : walletType === 'eth' ? isConnected : false,
     address: walletType === 'btc' ? accounts?.[0] : walletType === 'eth' ? address : '',
-    evmAddress: walletType === 'btc' ? evmAccount : walletType === 'eth' ? address : ''
+    evmAddress: walletType === 'btc' ? evmAccount : walletType === 'eth' ? address : '',
+    walletType,
+    currentWallet
   }
 }
 
