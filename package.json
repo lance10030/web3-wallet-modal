@@ -39,11 +39,10 @@
     "typegen:watch": "tsc --emitDeclarationOnly --watch"
   },
   "dependencies": {
-    "@ethereumjs/util": "^9.0.1",
-    "@particle-network/btc-connectkit": "^1.0.0-alpha.6",
     "react-modal": "^3.16.1"
   },
   "devDependencies": {
+    "@particle-network/btc-connectkit": "^1.0.0-alpha.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

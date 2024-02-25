@@ -55,7 +55,13 @@ const buildConfig = {
   define: {
     "process.env.NODE_ENV": "production",
   },
-  external: ["react", "react-dom", "viem", "wagmi"],
+  external: [
+    "react",
+    "react-dom",
+    "viem",
+    "wagmi",
+    "@particle-network/btc-connectkit",
+  ],
 };
 
 const buildESM = build({
