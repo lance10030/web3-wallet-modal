@@ -14,10 +14,10 @@ enum WalletTypeCode {
 }
 
 
-export const signedMsgAdapter = (sig: `0x${string}`, w: WalletTypes) => {
+export const signedMsgAdapter = (sig: string, w: WalletTypes) => {
   const { chainTypeCode, walletCode } = getWalletCode(w)
   if (chainTypeCode === ConnectorTypeCode.eth) {
-    return concatHex(['0x00', sig, walletCode])
+    return concatHex(['0x00', sig as `0x${string}`, walletCode])
   } else {
     const vrsSigBuff = Buffer.from(sig, 'base64')
     const v = vrsSigBuff[0] - 0x1f < 0 ? vrsSigBuff[0] - 0x1b : vrsSigBuff[0] - 0x1f
